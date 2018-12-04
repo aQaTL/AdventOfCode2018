@@ -53,18 +53,11 @@ fn part_1(table: &HashMap<u32, Vec<u32>>) -> u32 {
 }
 
 fn part_2(table: &HashMap<u32, Vec<u32>>) -> u32 {
-	let (mut minute, mut guard_id, mut most_freq_minute) = (0, 0, 0);
-	for (k, v) in table {
-		let (day, most_freq_minute_in_day) = v.iter().enumerate()
-			.max_by(|x, y| x.1.cmp(&y.1))
-			.unwrap();
-		if most_freq_minute_in_day > &most_freq_minute {
-			most_freq_minute = *most_freq_minute_in_day;
-			guard_id = *k;
-			minute = day;
-		}
-	}
-	minute as u32 * guard_id
+	let (laziest_guard_id, (most_freq_minute, _)) = table.iter()
+		.map(|(k, v)| (k, v.iter().enumerate().max_by(|x, y| x.1.cmp(&y.1)).unwrap()))
+		.max_by(|x, y| (x.1).1.cmp(&(y.1).1))
+		.unwrap();
+	laziest_guard_id * most_freq_minute as u32
 }
 
 struct Log {

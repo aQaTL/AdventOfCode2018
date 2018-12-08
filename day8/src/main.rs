@@ -7,7 +7,7 @@ fn main() {
 	let (mut i, mut metadata_sum, mut last_node_value) = (0usize, 0u32, 0u32);
 	let mut queue: Vec<Node> = Vec::with_capacity(input.len());
 	push_node(&input, &mut i, &mut queue);
-	loop {
+	while !queue.is_empty() {
 		let tail = queue.last_mut().unwrap();
 		if tail.children as usize == tail.child_values.len() {
 			if tail.children == 0 {
@@ -24,9 +24,8 @@ fn main() {
 			i += tail.metadata as usize;
 			last_node_value = tail.value;
 			queue.pop();
-			match queue.last_mut() {
-				Some(last_last) => (*last_last).child_values.push(last_node_value),
-				None => break,
+			if let Some(last_last) = queue.last_mut() {
+				(*last_last).child_values.push(last_node_value);
 			}
 		} else {
 			push_node(&input, &mut i, &mut queue);
